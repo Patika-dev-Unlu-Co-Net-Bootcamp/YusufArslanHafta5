@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnluCo.DataAccess;
+using UnluCo.DataAccess.Repository;
 
 namespace UnluCo
 {
@@ -28,10 +31,12 @@ namespace UnluCo
         {
 
             services.AddControllers();
+            services.AddDbContext<UnluDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UnluCo", Version = "v1" });
             });
+            services.AddScoped<IPlantRepository, PlantRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
